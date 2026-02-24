@@ -1,15 +1,15 @@
-import { $, el, delegate, replaceChildren } from '../utils/dom.js';
-import { showToast } from './status.js';
-import { initiateRedirect } from './redirect.js';
-import { t, formatRelativeTime } from '../i18n.js';
-import { getDisplayUrl } from '../validator.js';
+import { $, el, delegate, replaceChildren } from "../utils/dom.js";
+import { showToast } from "./status.js";
+import { initiateRedirect } from "./redirect.js";
+import { t, formatRelativeTime } from "../i18n.js";
+import { getDisplayUrl } from "../validator.js";
 
 let scanHistory = [];
-const MAX_HISTORY = 5;
+const MAX_HISTORY = 6;
 
 export function loadHistory() {
   try {
-    const stored = localStorage.getItem('yulearn-qr-history');
+    const stored = localStorage.getItem("yulearn-qr-history");
     scanHistory = stored ? JSON.parse(stored) : [];
   } catch {
     scanHistory = [];
@@ -19,9 +19,9 @@ export function loadHistory() {
 
 function saveHistory() {
   try {
-    localStorage.setItem('yulearn-qr-history', JSON.stringify(scanHistory));
+    localStorage.setItem("yulearn-qr-history", JSON.stringify(scanHistory));
   } catch {
-    console.warn('[History] localStorage save failed (quota exceeded)');
+    console.warn("[History] localStorage save failed (quota exceeded)");
   }
 }
 
@@ -42,35 +42,45 @@ export function clearHistory() {
   scanHistory = [];
   saveHistory();
   renderHistory();
-  showToast(t('historyClear'));
+  showToast(t("historyClear"));
 }
 
 export function renderHistory() {
-  const list = $('#history-list');
+  const list = $("#history-list");
   if (!list) return;
 
   if (scanHistory.length === 0) {
     replaceChildren(list, [
-      el('div', { className: 'history-empty', text: t('historyEmpty') })
+      el("div", { className: "history-empty", text: t("historyEmpty") }),
     ]);
     return;
   }
 
   const items = scanHistory.map((item) =>
-    el('div', {
-      className: 'history-item',
-      data: { url: item.url },
-      attrs: { role: 'button', tabindex: '0' }
-    }, [
-      el('span', { className: 'history-item__icon', text: '🔗' }),
-      el('span', { className: 'history-item__url', text: getDisplayUrl(item.url) }),
-      el('span', { className: 'history-item__time', text: formatRelativeTime(item.timestamp) })
-    ])
+    el(
+      "div",
+      {
+        className: "history-item",
+        data: { url: item.url },
+        attrs: { role: "button", tabindex: "0" },
+      },
+      [
+        el("span", { className: "history-item__icon", text: "🔗" }),
+        el("span", {
+          className: "history-item__url",
+          text: getDisplayUrl(item.url),
+        }),
+        el("span", {
+          className: "history-item__time",
+          text: formatRelativeTime(item.timestamp),
+        }),
+      ],
+    ),
   );
 
   replaceChildren(list, items);
 
-  delegate(list, 'click', '.history-item', (_e, item) => {
+  delegate(list, "click", ".history-item", (_e, item) => {
     initiateRedirect(item.dataset.url);
   });
 }

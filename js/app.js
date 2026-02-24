@@ -8,11 +8,22 @@ import { initiateRedirect, cancelRedirect } from './ui/redirect.js';
 
 // === Initialization === //
 document.addEventListener('DOMContentLoaded', () => {
+  detectPwaStandalone();
   loadHistory();
   applyTranslations();
   setupEventListeners();
   registerServiceWorker();
 });
+
+// === PWA Standalone Detection === //
+function detectPwaStandalone() {
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+  if (isStandalone) {
+    document.body.classList.add('pwa-standalone');
+  }
+}
 
 // === Service Worker Registration === //
 async function registerServiceWorker() {
