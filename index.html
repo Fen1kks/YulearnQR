@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+    <meta name="theme-color" content="#1e3a5f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="YulearnQR" />
+    <meta
+      name="description"
+      content="Yeditepe Üniversitesi Yulearn QR yoklama tarayıcı - Hızlı ve güvenli QR kod yoklama"/>
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <title>Yulearn QR Yoklama</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg" />
+    <link rel="apple-touch-icon" href="assets/icons/icon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- html5-qrcode Library -->
+    <script src="js/vendor/html5-qrcode.min.js"></script>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- Header -->
+      <header class="header">
+        <div class="header__brand">
+          <img
+            src="assets/icons/icon.svg"
+            alt="Yulearn QR"
+            class="header__logo" />
+          <h1 class="header__title" data-i18n="appTitle">
+            Yulearn QR
+          </h1>
+        </div>
+        <div class="header__actions">
+          <button
+            class="icon-btn"
+            id="btn-lang"
+            title="Dil Değiştir"
+            aria-label="Change Language">
+            EN
+          </button>
+        </div>
+      </header>
+
+      <!-- Scanner -->
+      <main class="scanner-section">
+        <!-- Scanner Container -->
+        <div class="scanner-container">
+          <!-- QR Reader -->
+          <div id="qr-reader"></div>
+
+          <!-- Placeholder (before camera starts) -->
+          <div class="scanner-placeholder" id="scanner-placeholder">
+            <div class="scanner-placeholder__icon">📸</div>
+            <p class="scanner-placeholder__text" data-i18n="scannerPlaceholder">
+              Taramayı başlatmak için aşağıdaki butona dokunun
+            </p>
+          </div>
+
+          <!-- Scanner overlay corners -->
+          <div class="scanner-overlay">
+            <div class="scanner-corner scanner-corner--tl"></div>
+            <div class="scanner-corner scanner-corner--tr"></div>
+            <div class="scanner-corner scanner-corner--bl"></div>
+            <div class="scanner-corner scanner-corner--br"></div>
+            <div class="scan-line" id="scan-line"></div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="camera-controls">
+          <button class="btn btn--primary btn--full" id="btn-scan">
+            <span class="btn__icon">📷</span>
+            <span data-i18n="startScan">Taramayı Başlat</span>
+          </button>
+          <button
+            class="icon-btn hidden"
+            id="btn-camera-switch"
+            title="Kamera Değiştir"
+            aria-label="Switch Camera">
+            🔄
+          </button>
+        </div>
+
+        <!-- Status Card -->
+        <div class="status-card" id="status-card">
+          <span class="status-card__icon"></span>
+          <div class="status-card__content">
+            <div class="status-card__title"></div>
+            <div class="status-card__text"></div>
+          </div>
+        </div>
+      </main>
+
+      <!-- History -->
+      <section class="history-section">
+        <div class="history-header">
+          <span class="history-header__title" data-i18n="historyTitle">
+            Son Taramalar
+          </span>
+          <button
+            class="history-header__clear"
+            id="btn-clear-history"
+            data-i18n="historyClear">
+            Temizle
+          </button>
+        </div>
+        <div class="history-list" id="history-list">
+          <div class="history-empty" data-i18n="historyEmpty">
+            Henüz tarama yapılmadı
+          </div>
+        </div>
+      </section>
+
+      <!-- Attribution -->
+      <div class="attribution">
+        <div data-i18n="footer">
+          Yeditepe Üniversitesi öğrencileri için geliştirildi
+        </div>
+        <div>
+          <span data-i18n="createdBy">
+            Yapımcı
+          </span>
+          <span class="author-name">
+            Hızır Ketenci
+          </span>
+        </div>
+        <a href="https://donate.bynogame.com/fen1kks" target="_blank" rel="noopener noreferrer">
+          <div class="donate-btn">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span data-i18n="donateBtn">Bağış Yap</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Redirect Overlay -->
+    <div class="redirect-overlay" id="redirect-overlay">
+      <div class="redirect-overlay__icon">🔗</div>
+      <div class="redirect-overlay__text" data-i18n="redirecting">
+        Yönlendiriliyor...
+      </div>
+      <div class="redirect-overlay__url" id="redirect-url"></div>
+      <button
+        class="btn btn--secondary redirect-overlay__cancel"
+        id="btn-redirect-cancel"
+        data-i18n="redirectCancel">
+        İptal
+      </button>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- App Module -->
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
