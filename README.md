@@ -1,6 +1,12 @@
+<img src="assets/icons/icon.svg" align="right" width="60">
+
 # Yulearn QR Yoklama Tarayıcı
 
 Yeditepe Üniversitesi öğrencileri için geliştirilmiş, Yulearn QR yoklama kodlarını hızlı ve güvenli şekilde tarayan bir **Progressive Web App (PWA)**.
+
+## 🚀 Canlı Demo
+
+Projeyi hemen dene: [Yulearn QR](https://fen1kks.github.io/YulearnQR/)
 
 ## ✨ Özellikler
 
@@ -61,6 +67,6 @@ YulearnQR/
 - **html5-qrcode** — QR tarama kütüphanesi
 - **PWA** — Manifest + Service Worker
 
-## 📄 Lisans
+---
 
-MIT
+**⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın!**
