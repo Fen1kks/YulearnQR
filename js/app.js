@@ -5,6 +5,12 @@ import { $, $$ } from './utils/dom.js';
 import { showStatus, showToast } from './ui/status.js';
 import { loadHistory, addToHistory, clearHistory, renderHistory } from './ui/history.js';
 import { initiateRedirect, cancelRedirect } from './ui/redirect.js';
+import { initSettings } from './ui/settings.js';
+
+const ICONS = {
+  camera: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`,
+  stop: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2" ry="2"/></svg>`
+};
 
 // === Initialization === //
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTranslations();
   setupEventListeners();
   registerServiceWorker();
+  initSettings();
   checkAutoScan();
 });
 
@@ -68,7 +75,7 @@ async function toggleScanner() {
 
   if (isScannerActive()) {
     await stopScanning();
-    btn.innerHTML = `<span class="btn__icon">📷</span> ${t('startScan')}`;
+    btn.innerHTML = `<span class="btn__icon">${ICONS.camera}</span> ${t('startScan')}`;
     btn.classList.remove('btn--danger');
     btn.classList.add('btn--primary');
     scanLine?.classList.remove('active');
@@ -84,7 +91,7 @@ async function toggleScanner() {
     initScanner({ elementId: 'qr-reader' });
     await startScanning(handleScanResult);
 
-    btn.innerHTML = `<span class="btn__icon">⏹️</span> ${t('stopScan')}`;
+    btn.innerHTML = `<span class="btn__icon">${ICONS.stop}</span> ${t('stopScan')}`;
     btn.classList.remove('btn--primary');
     btn.classList.add('btn--danger');
     scanLine?.classList.add('active');
@@ -105,7 +112,7 @@ async function toggleScanner() {
       msg = t('cameraError') + ' — ' + err.message.replace('CAMERA_ERROR: ', '');
     }
     showStatus('error', msg);
-    btn.innerHTML = `<span class="btn__icon">📷</span> ${t('startScan')}`;
+    btn.innerHTML = `<span class="btn__icon">${ICONS.camera}</span> ${t('startScan')}`;
   }
 
   btn.disabled = false;
@@ -163,7 +170,7 @@ function applyTranslations() {
 
   if (!isScannerActive()) {
     const btn = $('#btn-scan');
-    if (btn) btn.innerHTML = `<span class="btn__icon">📷</span> ${t('startScan')}`;
+    if (btn) btn.innerHTML = `<span class="btn__icon">${ICONS.camera}</span> ${t('startScan')}`;
   }
 
   document.documentElement.lang = lang;

@@ -1,6 +1,7 @@
 let html5QrScanner = null;
 let isScanning = false;
 let usingFrontCamera = false;
+import { getSetting } from './ui/settings.js';
 
 export function initScanner(config) {
   const { elementId } = config;
@@ -50,6 +51,10 @@ export async function startScanning(onSuccess, preferFront = false) {
         if (decodedText === lastScannedCode && now - lastScanTime < 5000) return;
         lastScannedCode = decodedText;
         lastScanTime = now;
+        if (getSetting('vibration') && navigator.vibrate) {
+            navigator.vibrate(200);
+        }
+        
         onSuccess(decodedText);
       },
       () => {

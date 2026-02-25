@@ -54,6 +54,26 @@
         <div class="header__actions">
           <button
             class="icon-btn"
+            id="btn-settings"
+            title="Ayarlar"
+            aria-label="Settings">
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
+            </svg>
+          </button>
+          <button
+            class="icon-btn"
             id="btn-lang"
             title="Dil Değiştir"
             aria-label="Change Language">
@@ -87,10 +107,14 @@
           </div>
         </div>
 
-        <!-- Controls -->
         <div class="camera-controls">
           <button class="btn btn--primary btn--full" id="btn-scan">
-            <span class="btn__icon">📷</span>
+            <span class="btn__icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                <circle cx="12" cy="13" r="3"/>
+              </svg>
+            </span>
             <span data-i18n="startScan">Taramayı Başlat</span>
           </button>
           <button
@@ -98,7 +122,10 @@
             id="btn-camera-switch"
             title="Kamera Değiştir"
             aria-label="Switch Camera">
-            🔄
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
           </button>
         </div>
 
@@ -158,7 +185,12 @@
 
     <!-- Redirect Overlay -->
     <div class="redirect-overlay" id="redirect-overlay">
-      <div class="redirect-overlay__icon">🔗</div>
+      <div class="redirect-overlay__icon">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </div>
       <div class="redirect-overlay__text" data-i18n="redirecting">
         Yönlendiriliyor...
       </div>
@@ -169,6 +201,56 @@
         data-i18n="redirectCancel">
         İptal
       </button>
+    </div>
+
+    <!-- Settings Overlay -->
+    <div class="settings-overlay" id="settings-overlay">
+      <div class="settings-modal">
+        <div class="settings-modal__header">
+          <h2 data-i18n="settingsTitle">Ayarlar</h2>
+          <button class="settings-modal__close" id="btn-settings-close">
+            ✕
+          </button>
+        </div>
+        <div class="settings-modal__body">
+          <div class="setting-item">
+            <div class="setting-item__info">
+              <span class="setting-item__title" data-i18n="vibrationTitle">
+                Titreşim (Haptic)
+              </span>
+              <span class="setting-item__desc" data-i18n="vibrationDesc">
+                Tarama işlemi başarılı olduğunda titreşim ile uyarır.
+              </span>
+            </div>
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="setting-toggle"
+                data-setting="vibration" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-item__info">
+              <span class="setting-item__title" data-i18n="autoRedirectTitle">
+                Anında Yönlendir
+              </span>
+              <span class="setting-item__desc" data-i18n="autoRedirectDesc">
+                Onay beklemeden doğrudan derse katılım sayfasına
+                yönlendirir.
+              </span>
+              >
+            </div>
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="setting-toggle"
+                data-setting="autoRedirect" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Toast -->

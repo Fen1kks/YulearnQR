@@ -207,7 +207,6 @@ body::before {
   box-shadow: var(--shadow-lg);
 }
 
-/* Scanner placeholder (before camera starts) */
 .scanner-placeholder {
   position: absolute;
   inset: 0;
@@ -237,7 +236,6 @@ body::before {
   display: none;
 }
 
-/* Scanner overlay corners */
 .scanner-overlay {
   position: absolute;
   inset: 0;
@@ -286,7 +284,6 @@ body::before {
   border-bottom-right-radius: 6px;
 }
 
-/* Scan line animation */
 .scan-line {
   position: absolute;
   left: 24px;
@@ -326,7 +323,6 @@ body::before {
   }
 }
 
-/* html5-qrcode reader container styles */
 #qr-reader {
   width: 100% !important;
   height: 100% !important;
@@ -344,7 +340,6 @@ body::before {
   min-height: auto !important;
 }
 
-/* Hide default html5-qrcode UI */
 #qr-reader__dashboard,
 #qr-reader__dashboard_section,
 #qr-reader__dashboard_section_csr,
@@ -418,6 +413,8 @@ body::before {
 
 .btn__icon {
   font-size: 1.2rem;
+  display: flex;
+  align-items: center;
 }
 
 /* === Status Card === */
@@ -582,6 +579,7 @@ body::before {
 .camera-controls {
   display: flex;
   gap: var(--space-sm);
+  align-items: center;
 }
 
 /* === Attribution Footer === */
@@ -642,7 +640,6 @@ body::before {
   color: inherit;
 }
 
-/* PWA Standalone — safe area offset */
 body.pwa-standalone .attribution {
   bottom: calc(0.5rem + env(safe-area-inset-bottom));
 }
@@ -783,4 +780,159 @@ body.pwa-standalone .attribution {
 
 .redirect-overlay__cancel {
   margin-top: var(--space-md);
+}
+
+/* === Settings Modal === */
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: var(--space-md);
+}
+
+.settings-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.settings-modal {
+  background: var(--bg-tertiary);
+  width: 100%;
+  max-width: 400px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.settings-overlay.visible .settings-modal {
+  transform: translateY(0);
+}
+
+.settings-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.settings-modal__header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.settings-modal__close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-modal__close:hover {
+  color: var(--text-primary);
+  background: var(--bg-glass-hover);
+}
+
+.settings-modal__body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.setting-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.setting-item__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.setting-item__desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* === Toggle Switch === */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-secondary);
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+input:checked + .slider {
+  background: var(--accent-gradient);
+  border-color: transparent;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+  background-color: #fff;
 }
