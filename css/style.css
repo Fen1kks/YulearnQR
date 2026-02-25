@@ -327,6 +327,7 @@ body::before {
   width: 100% !important;
   height: 100% !important;
   border: none !important;
+  position: relative !important;
 }
 
 #qr-reader video {
@@ -336,8 +337,18 @@ body::before {
   border-radius: var(--radius-lg);
 }
 
+#qr-reader img[alt="Info icon"],
+#qr-reader img[alt="Camera based scan"] {
+  display: none !important;
+}
+
 #qr-reader__scan_region {
   min-height: auto !important;
+  position: relative !important;
+}
+
+#qr-reader__scan_region > br {
+  display: none !important;
 }
 
 #qr-reader__dashboard,
@@ -347,6 +358,10 @@ body::before {
 #qr-reader__status_span,
 #qr-reader__header_message {
   display: none !important;
+}
+
+#qr-shaded-region {
+  border: none !important;
 }
 
 /* === Action Button === */

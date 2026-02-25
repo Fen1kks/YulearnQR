@@ -12,6 +12,7 @@ const APP_SHELL_FILES = [
   '/js/ui/status.js',
   '/js/ui/history.js',
   '/js/ui/redirect.js',
+  '/js/ui/settings.js',
   '/js/vendor/html5-qrcode.min.js',
   '/manifest.json',
   '/assets/icons/icon.svg'

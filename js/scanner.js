@@ -29,11 +29,15 @@ export async function startScanning(onSuccess, preferFront = false) {
   usingFrontCamera = preferFront;
 
   const scanConfig = {
-    fps: 25,
-    aspectRatio: 1.0,
-    disableFlip: true,
+    fps: 15,
+    qrbox: (viewfinderWidth, viewfinderHeight) => {
+      const minDimension = Math.min(viewfinderWidth, viewfinderHeight);
+      const size = Math.floor(minDimension * 0.7);
+      return { width: size, height: size };
+    },
+    disableFlip: false,
     experimentalFeatures: {
-      useBarCodeDetectorIfSupported: true
+      useBarCodeDetectorIfSupported: false
     }
   };
 
