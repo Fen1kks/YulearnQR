@@ -13,7 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTranslations();
   setupEventListeners();
   registerServiceWorker();
+  checkAutoScan();
 });
+
+// === Auto Scan Check === //
+function checkAutoScan() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('action') === 'scan') {
+    setTimeout(() => {
+      const btn = $('#btn-scan');
+      if (btn && !isScannerActive()) {
+        toggleScanner();
+      }
+    }, 500);
+  }
+}
 
 // === PWA Standalone Detection === //
 function detectPwaStandalone() {

@@ -29,10 +29,6 @@ export async function startScanning(onSuccess, preferFront = false) {
 
   const scanConfig = {
     fps: 25,
-    qrbox: (viewfinderWidth, viewfinderHeight) => {
-      const size = Math.min(viewfinderWidth, viewfinderHeight) * 0.85;
-      return { width: size, height: size };
-    },
     aspectRatio: 1.0,
     disableFlip: true,
     experimentalFeatures: {
