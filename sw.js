@@ -13,7 +13,8 @@ const APP_SHELL_FILES = [
   '/js/ui/history.js',
   '/js/ui/redirect.js',
   '/js/ui/settings.js',
-  '/js/vendor/html5-qrcode.min.js',
+  '/js/vendor/qr-scanner.min.js',
+  '/js/vendor/qr-scanner-worker.min.js',
   '/manifest.json',
   '/assets/icons/icon.svg'
 ];

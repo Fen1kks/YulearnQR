@@ -1,21 +1,15 @@
-let html5QrScanner = null;
-let isScanning = false;
-let usingFrontCamera = false;
+import QrScanner from './vendor/qr-scanner.min.js';
 import { getSetting } from './ui/settings.js';
 
-export function initScanner(config) {
-  const { elementId } = config;
+let qrScanner = null;
+let isScanning = false;
+let usingFrontCamera = false;
 
-  if (html5QrScanner) return;
+QrScanner.WORKER_PATH = './js/vendor/qr-scanner-worker.min.js';
 
-  html5QrScanner = new Html5Qrcode(elementId, {
-    verbose: false,
-    formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
-  });
-}
+
 
 export async function startScanning(onSuccess, preferFront = false) {
-  if (!html5QrScanner) throw new Error('Scanner not initialized');
   if (isScanning) return;
 
   if (!window.isSecureContext) {
@@ -28,43 +22,43 @@ export async function startScanning(onSuccess, preferFront = false) {
 
   usingFrontCamera = preferFront;
 
-  const scanConfig = {
-    fps: 10,
-    qrbox: (viewfinderWidth, viewfinderHeight) => {
-      const minDimension = Math.min(viewfinderWidth, viewfinderHeight);
-      const size = Math.floor(minDimension * 0.65);
-      return { width: size, height: size };
-    },
-    aspectRatio: 1.7778,
-    disableFlip: false,
-    experimentalFeatures: {
-      useBarCodeDetectorIfSupported: true
-    }
-  };
+  const videoElem = document.getElementById('qr-video');
+  if (!videoElem) {
+    throw new Error('CAMERA_ERROR: Video element not found');
+  }
 
   let lastScannedCode = '';
   let lastScanTime = 0;
 
-  const facingMode = preferFront ? 'user' : 'environment';
+  if (qrScanner) {
+    qrScanner.destroy();
+    qrScanner = null;
+  }
+
+  qrScanner = new QrScanner(
+    videoElem,
+    (result) => {
+      const decodedText = result.data;
+      const now = Date.now();
+      if (decodedText === lastScannedCode && now - lastScanTime < 5000) return;
+      lastScannedCode = decodedText;
+      lastScanTime = now;
+      if (getSetting('vibration') && navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+      onSuccess(decodedText);
+    },
+    {
+      returnDetailedScanResult: true,
+      preferredCamera: preferFront ? 'user' : 'environment',
+      maxScansPerSecond: 10,
+      highlightScanRegion: false,
+      highlightCodeOutline: false,
+    }
+  );
 
   try {
-    await html5QrScanner.start(
-      { facingMode },
-      scanConfig,
-      (decodedText) => {
-        const now = Date.now();
-        if (decodedText === lastScannedCode && now - lastScanTime < 5000) return;
-        lastScannedCode = decodedText;
-        lastScanTime = now;
-        if (getSetting('vibration') && navigator.vibrate) {
-            navigator.vibrate(200);
-        }
-        
-        onSuccess(decodedText);
-      },
-      () => {
-      }
-    );
+    await qrScanner.start();
     isScanning = true;
   } catch (err) {
     console.error('[Scanner] Start failed:', err);
@@ -84,22 +78,25 @@ export async function startScanning(onSuccess, preferFront = false) {
 }
 
 export async function stopScanning() {
-  if (!html5QrScanner || !isScanning) return;
+  if (!qrScanner || !isScanning) return;
 
   try {
-    await html5QrScanner.stop();
+    qrScanner.stop();
   } catch {
   }
   isScanning = false;
 }
 
-export async function switchCamera(onSuccess) {
-  const wasScanning = isScanning;
-  if (wasScanning) await stopScanning();
+export async function switchCamera() {
+  if (!qrScanner) return;
 
   usingFrontCamera = !usingFrontCamera;
+  const camera = usingFrontCamera ? 'user' : 'environment';
 
-  if (wasScanning) await startScanning(onSuccess, usingFrontCamera);
+  try {
+    await qrScanner.setCamera(camera);
+  } catch {
+  }
 }
 
 export function isScannerActive() {

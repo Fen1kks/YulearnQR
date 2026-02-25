@@ -14,6 +14,14 @@ export function loadHistory() {
   } catch {
     scanHistory = [];
   }
+
+  const list = $("#history-list");
+  if (list) {
+    delegate(list, "click", ".history-item", (_e, item) => {
+      initiateRedirect(item.dataset.url);
+    });
+  }
+
   renderHistory();
 }
 
@@ -79,8 +87,4 @@ export function renderHistory() {
   );
 
   replaceChildren(list, items);
-
-  delegate(list, "click", ".history-item", (_e, item) => {
-    initiateRedirect(item.dataset.url);
-  });
 }

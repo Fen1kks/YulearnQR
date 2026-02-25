@@ -6,6 +6,14 @@ import { getSetting } from './settings.js';
 
 let redirectTimeout = null;
 
+function handleEscKey(e) {
+  if (e.key === 'Escape') cancelRedirect();
+}
+
+function handleOverlayClick(e) {
+  if (e.target === $('#redirect-overlay')) cancelRedirect();
+}
+
 export function initiateRedirect(url) {
   if (getSetting('autoRedirect')) {
     window.location.href = url;
@@ -18,6 +26,9 @@ export function initiateRedirect(url) {
   if (urlDisplay) urlDisplay.textContent = getDisplayUrl(url);
   show(overlay);
 
+  document.addEventListener('keydown', handleEscKey);
+  overlay?.addEventListener('click', handleOverlayClick);
+
   redirectTimeout = setTimeout(() => {
     window.location.href = url;
   }, 800);
@@ -28,6 +39,10 @@ export function cancelRedirect() {
     clearTimeout(redirectTimeout);
     redirectTimeout = null;
   }
+
+  document.removeEventListener('keydown', handleEscKey);
+  $('#redirect-overlay')?.removeEventListener('click', handleOverlayClick);
+
   hide($('#redirect-overlay'));
   showToast(t('redirectCancel'));
 }

@@ -1,4 +1,4 @@
-import { initScanner, startScanning, stopScanning, switchCamera, isScannerActive } from './scanner.js';
+import { startScanning, stopScanning, switchCamera, isScannerActive } from './scanner.js';
 import { validateUrl } from './validator.js';
 import { t, getCurrentLang, setLang } from './i18n.js';
 import { $, $$ } from './utils/dom.js';
@@ -88,7 +88,6 @@ async function toggleScanner() {
   btn.innerHTML = `<span class="spinner"></span>`;
 
   try {
-    initScanner({ elementId: 'qr-reader' });
     await startScanning(handleScanResult);
 
     btn.innerHTML = `<span class="btn__icon">${ICONS.stop}</span> ${t('stopScan')}`;
@@ -122,10 +121,6 @@ async function toggleScanner() {
 function handleScanResult(decodedText) {
   const result = validateUrl(decodedText);
 
-  if ('vibrate' in navigator) {
-    navigator.vibrate(result.valid ? [100, 50, 100] : [300]);
-  }
-
   if (result.valid) {
     showStatus('success', t('validUrl'), result.url);
     addToHistory(result.url);
@@ -138,7 +133,7 @@ function handleScanResult(decodedText) {
 // === Camera Switch === //
 async function handleCameraSwitch() {
   try {
-    await switchCamera(handleScanResult);
+    await switchCamera();
     showToast(t('switchCamera'));
   } catch {
   }

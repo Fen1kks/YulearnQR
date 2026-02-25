@@ -10,11 +10,11 @@ Projeyi hemen dene: [Yulearn QR](https://fen1kks.github.io/YulearnQR/)
 
 ## ✨ Özellikler
 
-- 📸 **Hızlı QR Tarama** — html5-qrcode ile anlık tarama
+- 📸 **Hızlı QR Tarama** — qr-scanner (nimiq) ile anlık tarama
 - 🔒 **Güvenli Doğrulama** — Sadece `yulearn.yeditepe.edu.tr` bağlantıları kabul edilir
 - 🌐 **Çoklu Dil** — Türkçe ve İngilizce arayüz
 - 📱 **PWA** — Ana ekrana eklenebilir, native uygulama deneyimi
-- 📝 **Tarama Geçmişi** — Son 5 tarama kaydedilir
+- 📝 **Tarama Geçmişi** — Son 6 tarama kaydedilir
 
 ## 🚀 Kurulum
 
@@ -24,13 +24,14 @@ Kamera API'si HTTPS gerektirir. Yerel geliştirme için:
 
 ```bash
 # SSL sertifikaları oluştur (bir kerelik)
-openssl req -x509 -newkey rsa:2048 -keyout cert.key -out cert.crt -days 365 -nodes -subj "/CN=localhost"
+npx -y mkcert create-ca
+npx -y mkcert create-cert
 
 # HTTPS sunucusu başlat
 npx -y http-server . -p 8080 -c-1 -S -C cert.crt -K cert.key
 ```
 
-Tarayıcıda `https://localhost:8080` adresini aç.
+Tarayıcıda `https://localhost:8080` adresini aç. Telefondan test için `https://<IP_ADRESIN>:8080` kullan.
 
 ### GitHub Pages
 
@@ -46,17 +47,19 @@ YulearnQR/
 ├── css/style.css           # Stiller
 ├── js/
 │   ├── app.js              # Orkestratör
-│   ├── scanner.js          # QR tarayıcı
+│   ├── scanner.js          # QR tarayıcı (qr-scanner)
 │   ├── validator.js        # URL doğrulama
 │   ├── i18n.js             # Çoklu dil (TR/EN)
 │   ├── utils/
 │   │   └── dom.js          # DOM yardımcıları ($, el, show/hide, delegate)
 │   ├── ui/
 │   │   ├── status.js       # Durum kartı & toast
-│   │   ├── history.js      # Tarama geçmişi (FIFO, max 7)
-│   │   └── redirect.js     # Yönlendirme overlay
+│   │   ├── history.js      # Tarama geçmişi (FIFO, max 6)
+│   │   ├── redirect.js     # Yönlendirme overlay
+│   │   └── settings.js     # Ayarlar modalı
 │   └── vendor/
-│       └── html5-qrcode.min.js
+│       ├── qr-scanner.min.js
+│       └── qr-scanner-worker.min.js
 └── assets/icons/icon.svg
 ```
 
@@ -64,7 +67,7 @@ YulearnQR/
 
 - **HTML5 / CSS3 / Vanilla JS** — Sıfır framework
 - **ES Modules** — Modüler yapı
-- **html5-qrcode** — QR tarama kütüphanesi
+- **qr-scanner** (nimiq) — QR tarama kütüphanesi
 - **PWA** — Manifest + Service Worker
 
 ---
