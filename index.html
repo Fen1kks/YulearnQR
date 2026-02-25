@@ -15,27 +15,20 @@
       name="description"
       content="Yeditepe Üniversitesi Yulearn QR yoklama tarayıcı - Hızlı ve güvenli QR kod yoklama"/>
     <meta name="mobile-web-app-capable" content="yes" />
-
     <title>Yulearn QR Yoklama</title>
-
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json" />
-
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg" />
     <link rel="apple-touch-icon" href="assets/icons/icon.svg" />
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet" />
-
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css" />
-
-
   </head>
   <body>
     <div class="app" id="app">
@@ -80,14 +73,12 @@
           </button>
         </div>
       </header>
-
       <!-- Scanner -->
       <main class="scanner-section">
         <!-- Scanner Container -->
         <div class="scanner-container">
           <!-- QR Reader -->
           <video id="qr-video" muted playsinline></video>
-
           <!-- Placeholder (before camera starts) -->
           <div class="scanner-placeholder" id="scanner-placeholder">
             <div class="scanner-placeholder__icon">📸</div>
@@ -95,7 +86,6 @@
               Taramayı başlatmak için aşağıdaki butona dokunun
             </p>
           </div>
-
           <!-- Scanner overlay corners -->
           <div class="scanner-overlay">
             <div class="scanner-corner scanner-corner--tl"></div>
@@ -105,7 +95,6 @@
             <div class="scan-line" id="scan-line"></div>
           </div>
         </div>
-
         <div class="camera-controls">
           <button class="btn btn--primary btn--full" id="btn-scan">
             <span data-i18n="startScan">Taramayı Başlat</span>
@@ -121,7 +110,6 @@
             </svg>
           </button>
         </div>
-
         <!-- Status Card -->
         <div class="status-card" id="status-card">
           <span class="status-card__icon"></span>
@@ -131,7 +119,6 @@
           </div>
         </div>
       </main>
-
       <!-- History -->
       <section class="history-section">
         <div class="history-header">
@@ -151,7 +138,6 @@
           </div>
         </div>
       </section>
-
       <!-- Attribution -->
       <div class="attribution">
         <div data-i18n="footer">
@@ -175,7 +161,6 @@
         </a>
       </div>
     </div>
-
     <!-- Redirect Overlay -->
     <div class="redirect-overlay" id="redirect-overlay">
       <div class="redirect-overlay__icon">
@@ -195,7 +180,6 @@
         İptal
       </button>
     </div>
-
     <!-- Settings Overlay -->
     <div class="settings-overlay" id="settings-overlay">
       <div class="settings-modal">
@@ -244,10 +228,8 @@
         </div>
       </div>
     </div>
-
     <!-- Toast -->
     <div class="toast" id="toast"></div>
-
     <!-- App Module -->
     <script type="module" src="js/app.js"></script>
   </body>

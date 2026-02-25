@@ -15,6 +15,7 @@ Projeyi hemen dene: [Yulearn QR](https://fen1kks.github.io/YulearnQR/)
 - 🌐 **Çoklu Dil** — Türkçe ve İngilizce arayüz
 - 📱 **PWA** — Ana ekrana eklenebilir, native uygulama deneyimi
 - 📝 **Tarama Geçmişi** — Son 6 tarama kaydedilir
+- ⚙️ **Ayarlar** — Titreşim (haptic) ve anında yönlendirme seçenekleri
 
 ## 🚀 Kurulum
 
@@ -69,6 +70,10 @@ YulearnQR/
 - **ES Modules** — Modüler yapı
 - **qr-scanner** (nimiq) — QR tarama kütüphanesi
 - **PWA** — Manifest + Service Worker
+
+## 📄 Lisans
+
+MIT License — detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
 ---
 

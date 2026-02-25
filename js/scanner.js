@@ -7,8 +7,6 @@ let usingFrontCamera = false;
 
 QrScanner.WORKER_PATH = './js/vendor/qr-scanner-worker.min.js';
 
-
-
 export async function startScanning(onSuccess, preferFront = false) {
   if (isScanning) return;
 
