@@ -45,13 +45,11 @@ export async function startScanning(onSuccess, preferFront = false) {
   let lastScannedCode = '';
   let lastScanTime = 0;
 
-  const cameraConfig = preferFront
-    ? { facingMode: 'user' }
-    : { facingMode: { ideal: 'environment' } };
+  const facingMode = preferFront ? 'user' : 'environment';
 
   try {
     await html5QrScanner.start(
-      cameraConfig,
+      { facingMode },
       scanConfig,
       (decodedText) => {
         const now = Date.now();
