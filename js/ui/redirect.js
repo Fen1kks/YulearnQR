@@ -3,6 +3,7 @@ import { showToast } from './status.js';
 import { t } from '../i18n.js';
 import { getDisplayUrl } from '../validator.js';
 import { getSetting } from './settings.js';
+import { stopScanning } from '../scanner.js';
 
 let redirectTimeout = null;
 
@@ -14,9 +15,14 @@ function handleOverlayClick(e) {
   if (e.target === $('#redirect-overlay')) cancelRedirect();
 }
 
+async function navigateToUrl(url) {
+  await stopScanning();
+  window.location.href = url;
+}
+
 export function initiateRedirect(url) {
   if (getSetting('autoRedirect')) {
-    window.location.href = url;
+    navigateToUrl(url);
     return;
   }
 
@@ -30,7 +36,7 @@ export function initiateRedirect(url) {
   overlay?.addEventListener('click', handleOverlayClick);
 
   redirectTimeout = setTimeout(() => {
-    window.location.href = url;
+    navigateToUrl(url);
   }, 800);
 }
 

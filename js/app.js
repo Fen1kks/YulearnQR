@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
   registerServiceWorker();
   initSettings();
   checkAutoScan();
+
+  document.addEventListener('visibilitychange', async () => {
+    if (document.hidden && isScannerActive()) {
+      await stopScanning();
+      resetScannerUI();
+    }
+  });
 });
 
 // === Auto Scan Check === //
@@ -118,16 +125,35 @@ async function toggleScanner() {
 }
 
 // === Handle Scan Result === //
-function handleScanResult(decodedText) {
+async function handleScanResult(decodedText) {
   const result = validateUrl(decodedText);
 
   if (result.valid) {
+    await stopScanning();
+    resetScannerUI();
+
     showStatus('success', t('validUrl'), result.url);
     addToHistory(result.url);
     initiateRedirect(result.url);
   } else {
     showStatus('error', t('invalidUrl'), decodedText);
   }
+}
+
+// === Reset Scanner UI to idle state === //
+function resetScannerUI() {
+  const btn = $('#btn-scan');
+  const scanLine = $('.scan-line');
+  const placeholder = $('.scanner-placeholder');
+
+  if (btn) {
+    btn.innerHTML = `<span class="btn__icon">${ICONS.camera}</span> ${t('startScan')}`;
+    btn.classList.remove('btn--danger');
+    btn.classList.add('btn--primary');
+  }
+  scanLine?.classList.remove('active');
+  placeholder?.classList.remove('hidden');
+  $('#btn-camera-switch')?.classList.add('hidden');
 }
 
 // === Camera Switch === //
