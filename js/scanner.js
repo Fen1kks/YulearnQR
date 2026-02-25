@@ -29,26 +29,32 @@ export async function startScanning(onSuccess, preferFront = false) {
   usingFrontCamera = preferFront;
 
   const scanConfig = {
-    fps: 15,
+    fps: 10,
     qrbox: (viewfinderWidth, viewfinderHeight) => {
       const minDimension = Math.min(viewfinderWidth, viewfinderHeight);
-      const size = Math.floor(minDimension * 0.7);
+      const size = Math.floor(minDimension * 0.65);
       return { width: size, height: size };
     },
     disableFlip: false,
     experimentalFeatures: {
-      useBarCodeDetectorIfSupported: false
+      useBarCodeDetectorIfSupported: true
     }
   };
 
   let lastScannedCode = '';
   let lastScanTime = 0;
 
-  const facingMode = preferFront ? 'user' : 'environment';
+  const cameraConfig = preferFront
+    ? { facingMode: 'user' }
+    : {
+        facingMode: { ideal: 'environment' },
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      };
 
   try {
     await html5QrScanner.start(
-      { facingMode },
+      cameraConfig,
       scanConfig,
       (decodedText) => {
         const now = Date.now();
