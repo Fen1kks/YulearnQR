@@ -35,6 +35,7 @@ export async function startScanning(onSuccess, preferFront = false) {
       const size = Math.floor(minDimension * 0.65);
       return { width: size, height: size };
     },
+    aspectRatio: 1.7778,
     disableFlip: false,
     experimentalFeatures: {
       useBarCodeDetectorIfSupported: true
@@ -46,11 +47,7 @@ export async function startScanning(onSuccess, preferFront = false) {
 
   const cameraConfig = preferFront
     ? { facingMode: 'user' }
-    : {
-        facingMode: { ideal: 'environment' },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      };
+    : { facingMode: { ideal: 'environment' } };
 
   try {
     await html5QrScanner.start(
