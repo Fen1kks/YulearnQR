@@ -22,13 +22,11 @@
   --success-glow: rgba(46, 160, 67, 0.3);
   --error: #f85149;
   --error-glow: rgba(248, 81, 73, 0.3);
-  --warning: #d29922;
 
   /* Text */
   --text-primary: #e6edf3;
   --text-secondary: #8b949e;
   --text-muted: #484f58;
-  --text-accent: #00bcd4;
 
   /* Borders */
   --border: rgba(48, 54, 61, 0.6);
@@ -48,7 +46,7 @@
   --space-xl: 32px;
   --space-2xl: 48px;
 
-  /* Borders */
+  /* Border Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -124,6 +122,7 @@ body::before {
   display: flex;
   flex-direction: column;
   padding: var(--space-md);
+  padding-bottom: 80px;
   gap: var(--space-sm);
 }
 
@@ -199,7 +198,7 @@ body::before {
 .scanner-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--bg-secondary);
@@ -230,10 +229,6 @@ body::before {
   text-align: center;
   max-width: 250px;
   line-height: 1.5;
-}
-
-.scanner-placeholder.hidden {
-  display: none;
 }
 
 .scanner-overlay {
@@ -331,6 +326,9 @@ body::before {
   position: absolute;
   top: 0;
   left: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  will-change: transform;
 }
 
 /* === Action Button === */
@@ -460,7 +458,6 @@ body::before {
   word-break: break-all;
 }
 
-
 @keyframes slide-up {
   from {
     opacity: 0;
@@ -572,6 +569,101 @@ body::before {
   align-items: center;
 }
 
+/* === Zoom Controls === */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: slide-up 0.3s ease;
+}
+
+.zoom-controls.hidden {
+  display: none !important;
+}
+
+.zoom-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  font-family: var(--font-family);
+  line-height: 1;
+}
+
+.zoom-btn:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-accent);
+  color: var(--accent-primary);
+}
+
+.zoom-btn:active {
+  transform: scale(0.9);
+}
+
+.zoom-slider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  outline: none;
+  min-width: 80px;
+}
+
+.zoom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  background: var(--accent-primary);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--accent-glow);
+  border: 2px solid var(--bg-primary);
+  transition: transform var(--transition-fast);
+}
+
+.zoom-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.zoom-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  background: var(--accent-primary);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--accent-glow);
+  border: 2px solid var(--bg-primary);
+}
+
+.zoom-level {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  min-width: 36px;
+  text-align: center;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
 /* === Attribution Footer === */
 .attribution {
   position: fixed;
@@ -616,7 +708,9 @@ body::before {
   align-items: center;
   gap: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   cursor: pointer;
 }
 
@@ -822,7 +916,9 @@ body.pwa-standalone .attribution {
   cursor: pointer;
   padding: 4px;
   border-radius: var(--radius-sm);
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -889,7 +985,7 @@ body.pwa-standalone .attribution {
   bottom: 0;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border);
-  transition: .3s;
+  transition: 0.3s;
   border-radius: 34px;
 }
 
@@ -901,7 +997,7 @@ body.pwa-standalone .attribution {
   left: 3px;
   bottom: 3px;
   background-color: var(--text-secondary);
-  transition: .3s;
+  transition: 0.3s;
   border-radius: 50%;
   box-shadow: var(--shadow-sm);
 }

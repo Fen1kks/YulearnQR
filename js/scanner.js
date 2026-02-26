@@ -1,5 +1,6 @@
 import QrScanner from './vendor/qr-scanner.min.js';
 import { getSetting } from './ui/settings.js';
+import { initZoom, destroyZoom, resetZoom, getZoomInfo } from './zoom-controller.js';
 
 let qrScanner = null;
 let isScanning = false;
@@ -38,7 +39,7 @@ export async function startScanning(onSuccess, preferFront = false) {
     (result) => {
       const decodedText = result.data;
       const now = Date.now();
-      if (decodedText === lastScannedCode && now - lastScanTime < 5000) return;
+      if (decodedText === lastScannedCode && now - lastScanTime < 2000) return;
       lastScannedCode = decodedText;
       lastScanTime = now;
       if (getSetting('vibration') && navigator.vibrate) {
@@ -49,15 +50,53 @@ export async function startScanning(onSuccess, preferFront = false) {
     {
       returnDetailedScanResult: true,
       preferredCamera: preferFront ? 'user' : 'environment',
-      maxScansPerSecond: 10,
+      maxScansPerSecond: 35,
       highlightScanRegion: false,
       highlightCodeOutline: false,
+      calculateScanRegion: (video) => {
+        const zoom = getZoomInfo().current;
+        const minDim = Math.min(video.videoWidth, video.videoHeight);
+        const ratio = zoom > 1.5 ? 0.4 : zoom > 1.0 ? 0.6 : 0.8;
+        const scanSize = Math.round(minDim * ratio);
+        return {
+          x: Math.round((video.videoWidth - scanSize) / 2),
+          y: Math.round((video.videoHeight - scanSize) / 2),
+          width: scanSize,
+          height: scanSize,
+        };
+      },
     }
   );
+
+  qrScanner.setInversionMode('original');
 
   try {
     await qrScanner.start();
     isScanning = true;
+
+    setTimeout(() => {
+      try {
+        const stream = videoElem.srcObject;
+        if (stream) {
+          const track = stream.getVideoTracks()[0];
+          if (track) {
+            const caps = track.getCapabilities?.() || {};
+            const advancedConstraints = [];
+            if (caps.focusMode?.includes('continuous')) {
+              advancedConstraints.push({ focusMode: 'continuous' });
+            }
+            if (advancedConstraints.length > 0) {
+              track.applyConstraints({ advanced: advancedConstraints })
+                .catch(() => {});
+            }
+          }
+        }
+      } catch {
+      }
+
+      const zoomInfo = initZoom(videoElem);
+      window.dispatchEvent(new CustomEvent('zoom-ready', { detail: zoomInfo }));
+    }, 300);
   } catch (err) {
     console.error('[Scanner] Start failed:', err);
 
@@ -78,6 +117,8 @@ export async function startScanning(onSuccess, preferFront = false) {
 export async function stopScanning() {
   if (!qrScanner || !isScanning) return;
 
+  destroyZoom();
+
   try {
     qrScanner.stop();
   } catch {
@@ -88,11 +129,22 @@ export async function stopScanning() {
 export async function switchCamera() {
   if (!qrScanner) return;
 
+  await resetZoom();
+  destroyZoom();
+
   usingFrontCamera = !usingFrontCamera;
   const camera = usingFrontCamera ? 'user' : 'environment';
 
   try {
     await qrScanner.setCamera(camera);
+
+    const videoElem = document.getElementById('qr-video');
+    if (videoElem) {
+      setTimeout(() => {
+        const zoomInfo = initZoom(videoElem);
+        window.dispatchEvent(new CustomEvent('zoom-ready', { detail: zoomInfo }));
+      }, 500);
+    }
   } catch {
   }
 }

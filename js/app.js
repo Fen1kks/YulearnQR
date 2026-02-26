@@ -6,6 +6,7 @@ import { showStatus, showToast } from './ui/status.js';
 import { loadHistory, addToHistory, clearHistory, renderHistory } from './ui/history.js';
 import { initiateRedirect, cancelRedirect } from './ui/redirect.js';
 import { initSettings } from './ui/settings.js';
+import { setZoomLevel, zoomIn, zoomOut, getZoomInfo, handlePinchStart, handlePinchMove, handlePinchEnd } from './zoom-controller.js';
 
 const ICONS = {
   camera: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`,
@@ -27,6 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
       await stopScanning();
       resetScannerUI();
     }
+  });
+
+  window.addEventListener('zoom-ready', (e) => {
+    configureZoomUI(e.detail);
   });
 });
 
@@ -72,6 +77,80 @@ function setupEventListeners() {
   $('#btn-lang').addEventListener('click', toggleLanguage);
   $('#btn-clear-history')?.addEventListener('click', clearHistory);
   $('#btn-redirect-cancel')?.addEventListener('click', cancelRedirect);
+  $('#btn-zoom-in')?.addEventListener('click', handleZoomIn);
+  $('#btn-zoom-out')?.addEventListener('click', handleZoomOut);
+  $('#zoom-slider')?.addEventListener('input', handleZoomSlider);
+
+  const scannerContainer = $('.scanner-container');
+  if (scannerContainer) {
+    scannerContainer.addEventListener('touchstart', handlePinchStart, { passive: true });
+    scannerContainer.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2) {
+        handlePinchMove(e);
+        const info = getZoomInfo();
+        const slider = $('#zoom-slider');
+        if (slider) slider.value = info.current;
+        updateZoomDisplay(info.current);
+      }
+    }, { passive: false });
+    scannerContainer.addEventListener('touchend', handlePinchEnd, { passive: true });
+  }
+}
+
+// === Zoom UI Helpers === //
+function configureZoomUI(zoomInfo) {
+  const slider = $('#zoom-slider');
+  const zoomControls = $('#zoom-controls');
+  if (!slider || !zoomControls) return;
+
+  slider.min = zoomInfo.min;
+  slider.max = zoomInfo.max;
+  slider.step = zoomInfo.step;
+  slider.value = zoomInfo.current;
+
+  updateZoomDisplay(zoomInfo.current);
+
+  zoomControls.classList.remove('hidden');
+}
+
+async function handleZoomIn() {
+  const level = await zoomIn();
+  updateZoomDisplay(level);
+  const slider = $('#zoom-slider');
+  if (slider) slider.value = level;
+}
+
+async function handleZoomOut() {
+  const level = await zoomOut();
+  updateZoomDisplay(level);
+  const slider = $('#zoom-slider');
+  if (slider) slider.value = level;
+}
+
+async function handleZoomSlider(e) {
+  const level = parseFloat(e.target.value);
+  await setZoomLevel(level);
+  updateZoomDisplay(level);
+}
+
+function updateZoomDisplay(level) {
+  const display = $('#zoom-level');
+  if (!display) return;
+
+  if (level !== undefined) {
+    display.textContent = `${level.toFixed(1)}x`;
+  } else {
+    const slider = $('#zoom-slider');
+    if (slider) display.textContent = `${parseFloat(slider.value).toFixed(1)}x`;
+  }
+}
+
+function hideZoomControls() {
+  const zoomControls = $('#zoom-controls');
+  const slider = $('#zoom-slider');
+  if (zoomControls) zoomControls.classList.add('hidden');
+  if (slider) slider.value = 1;
+  updateZoomDisplay(1.0);
 }
 
 // === Scanner Toggle === //
@@ -88,6 +167,7 @@ async function toggleScanner() {
     scanLine?.classList.remove('active');
     placeholder?.classList.remove('hidden');
     $('#btn-camera-switch')?.classList.add('hidden');
+    hideZoomControls();
     return;
   }
 
@@ -154,11 +234,13 @@ function resetScannerUI() {
   scanLine?.classList.remove('active');
   placeholder?.classList.remove('hidden');
   $('#btn-camera-switch')?.classList.add('hidden');
+  hideZoomControls();
 }
 
 // === Camera Switch === //
 async function handleCameraSwitch() {
   try {
+    hideZoomControls();
     await switchCamera();
     showToast(t('switchCamera'));
   } catch {

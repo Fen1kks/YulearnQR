@@ -13,6 +13,7 @@ const APP_SHELL_FILES = [
   '/js/ui/history.js',
   '/js/ui/redirect.js',
   '/js/ui/settings.js',
+  '/js/zoom-controller.js',
   '/js/vendor/qr-scanner.min.js',
   '/js/vendor/qr-scanner-worker.min.js',
   '/manifest.json',
