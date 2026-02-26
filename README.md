@@ -11,6 +11,7 @@ Projeyi hemen dene: [Yulearn QR](https://fen1kks.github.io/YulearnQR/)
 ## ✨ Özellikler
 
 - 📸 **Hızlı QR Tarama** — qr-scanner (nimiq) ile anlık tarama
+- 🔍 **Hibrit Zoom** — Android'de optik zoom, iOS'te dijital zoom + pinch-to-zoom
 - 🔒 **Güvenli Doğrulama** — Sadece `yulearn.yeditepe.edu.tr` bağlantıları kabul edilir
 - 🌐 **Çoklu Dil** — Türkçe ve İngilizce arayüz
 - 📱 **PWA** — Ana ekrana eklenebilir, native uygulama deneyimi
@@ -49,6 +50,7 @@ YulearnQR/
 ├── js/
 │   ├── app.js              # Orkestratör
 │   ├── scanner.js          # QR tarayıcı (qr-scanner)
+│   ├── zoom-controller.js  # Hibrit zoom motoru (HW/SW)
 │   ├── validator.js        # URL doğrulama
 │   ├── i18n.js             # Çoklu dil (TR/EN)
 │   ├── utils/
